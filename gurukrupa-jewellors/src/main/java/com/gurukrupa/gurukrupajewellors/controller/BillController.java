@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,9 +32,13 @@ public class BillController {
 	}
 	
 	@GetMapping(value="/bills/bybillno/{billno}")
-	public ResponseEntity<Bill> getBillByBillno(@PathVariable("billno") String billno)
+	public ResponseEntity<Bill> getBillByBillno(@PathVariable("billno") Long billno)
 	{
-		return new ResponseEntity<Bill>(repository.getBillByBillno(billno),HttpStatus.OK);
+		Bill bill = repository.findById(billno).orElse(null);
+		if(bill!=null)
+		return new ResponseEntity<Bill>(bill,HttpStatus.OK);
+		else
+		return new ResponseEntity<Bill>(HttpStatus.NOT_FOUND);
 	}
 	@GetMapping(value="/bills/bydate/{date}")
 	public ResponseEntity<List<Bill>>getBillByDate(@PathVariable("date")LocalDate date)
@@ -60,11 +65,13 @@ public class BillController {
 	{
 		return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
 	}
+	@PutMapping(value="/bills/update")
 	public ResponseEntity<Bill>updateBill(@RequestBody Bill bill)
 	{
-		if(repository.getBillByBillno(bill.getBillno())!=null)
-			return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
+		Bill b = repository.findById(bill.getBillno()).orElse(null);
+		if(b!=null)
+		return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
 		else
-			return new ResponseEntity<Bill>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<Bill>(HttpStatus.BAD_REQUEST);
 	}
 }

@@ -12,8 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
 
-	@Query("from Bill where billno=:billno")
-	public Bill getBillByBillno(@Param("billno") String billno);
+	
 	
 	@Query("from Bill where date=:date")
 	public List<Bill>getBillByDate(@Param("date") LocalDate date);

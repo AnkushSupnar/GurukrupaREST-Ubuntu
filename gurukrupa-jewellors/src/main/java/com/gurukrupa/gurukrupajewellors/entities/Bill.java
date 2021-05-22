@@ -14,9 +14,8 @@ import javax.persistence.OneToMany;
 @Entity
 public class Bill {
 	@Id
-	long id;
+	long billno;
 	LocalDate date;
-	String billno;
 	double amount;
 	double paidamount;
 	
@@ -39,12 +38,11 @@ public class Bill {
 		super();
 	}
 
-	public Bill(long id,LocalDate date, String billno, double amount, double paidamount, Customer customer, Bank bank, Login login,
+	public Bill(long billno,LocalDate date,  double amount, double paidamount, Customer customer, Bank bank, Login login,
 			List<Transaction> transaction) {
 		super();
-		this.id = id;
-		this.date = date;
 		this.billno = billno;
+		this.date = date;		
 		this.amount = amount;
 		this.paidamount = paidamount;
 		this.customer = customer;
@@ -53,12 +51,12 @@ public class Bill {
 		this.transaction = transaction;
 	}
 
-	public long getId() {
-		return id;
+	public long getBillno() {
+		return billno;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setId(long billno) {
+		this.billno = billno;
 	}
 
 	public LocalDate getDate() {
@@ -68,15 +66,6 @@ public class Bill {
 	public void setDate(LocalDate date) {
 		this.date = date;
 	}
-
-	public String getBillno() {
-		return billno;
-	}
-
-	public void setBillno(String billno) {
-		this.billno = billno;
-	}
-
 	public double getAmount() {
 		return amount;
 	}
@@ -127,7 +116,7 @@ public class Bill {
 
 	@Override
 	public String toString() {
-		return "Bill [id=" + id + ", date=" + date + ", billno=" + billno + ", amount=" + amount + ", paidamount="
+		return "Bill [billno=" + billno+ ", date=" + date + ", amount=" + amount + ", paidamount="
 				+ paidamount + ", customer=" + customer + ", bank=" + bank + ", login=" + login + ", transaction="
 				+ transaction + "]";
 	}
