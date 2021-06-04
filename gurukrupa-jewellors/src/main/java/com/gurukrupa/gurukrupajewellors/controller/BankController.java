@@ -38,6 +38,11 @@ public class BankController {
 	{
 		return new ResponseEntity<List<Bank>>(repository.findAll(),HttpStatus.OK);
 	}
+	@GetMapping(value="/banks/bybankname/{bankname}")
+	private ResponseEntity<Bank>getBankByBankName(@PathVariable("bankname")String bankname)
+	{
+		return new ResponseEntity<Bank>(repository.getBankByBankName(bankname),HttpStatus.OK);
+	}
 	@GetMapping(value="/banks/allbanknames",produces = MediaType.APPLICATION_JSON_VALUE)
 	private ResponseEntity<List<String>>getAllBankNames()
 	{

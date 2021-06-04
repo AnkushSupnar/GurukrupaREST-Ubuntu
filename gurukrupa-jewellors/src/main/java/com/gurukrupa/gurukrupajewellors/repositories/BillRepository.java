@@ -25,5 +25,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 	
 	@Query("from Bill where date BETWEEN :startdate AND :enddate")
 	public List<Bill>getDatePeriodBill(@Param("startdate")LocalDate start,@Param("enddate")LocalDate end);
-	
+
+	@Query("delete from Transaction where billno=:billno")
+	public void deleteTransaction(@Param("billno")long billno);
 }

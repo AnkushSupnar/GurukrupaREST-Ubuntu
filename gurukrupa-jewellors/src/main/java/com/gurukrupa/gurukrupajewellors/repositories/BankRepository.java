@@ -19,6 +19,9 @@ public interface BankRepository extends JpaRepository<Bank, Integer> {
 	
 	@Query("select balance from Bank where id=:id")
 	public double getBankBalance(@Param("id") int id);
+
+	@Query("from Bank where bankname=:bankname")
+	public Bank getBankByBankName(@Param("bankname")String bankname);
 	
 	//@Query("update Bank set balance=balance+:balance where id=:id")
 	//public int addBankBalance(@Param("id") int id,@Param("balance")double balance);

@@ -4,20 +4,29 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Bill {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	long billno;
 	LocalDate date;
 	double amount;
 	double paidamount;
+	double cgst;
+	double sgst;
+	double discount;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="customerid",referencedColumnName = "id")	
@@ -31,7 +40,8 @@ public class Bill {
 	@JoinColumn(name="loginid",referencedColumnName = "id")
 	Login login;
 	
-	@OneToMany(mappedBy = "bill")
+	//@OneToMany(mappedBy = "bill")
+	@OneToMany(fetch = FetchType.LAZY,mappedBy="bill",cascade = CascadeType.ALL)
 	List<Transaction>transaction = new ArrayList<>();
 
 	public Bill() {
@@ -55,7 +65,7 @@ public class Bill {
 		return billno;
 	}
 
-	public void setId(long billno) {
+	public void setBillno(long billno) {
 		this.billno = billno;
 	}
 
@@ -72,6 +82,30 @@ public class Bill {
 
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+
+	public double getCgst() {
+		return cgst;
+	}
+
+	public void setCgst(double cgst) {
+		this.cgst = cgst;
+	}
+
+	public double getSgst() {
+		return sgst;
+	}
+
+	public void setSgst(double sgst) {
+		this.sgst = sgst;
+	}
+
+	public double getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(double discount) {
+		this.discount = discount;
 	}
 
 	public double getPaidamount() {
@@ -105,7 +139,7 @@ public class Bill {
 	public void setLogin(Login login) {
 		this.login = login;
 	}
-
+	@JsonManagedReference
 	public List<Transaction> getTransaction() {
 		return transaction;
 	}
@@ -114,12 +148,14 @@ public class Bill {
 		this.transaction = transaction;
 	}
 
-	@Override
-	public String toString() {
-		return "Bill [billno=" + billno+ ", date=" + date + ", amount=" + amount + ", paidamount="
-				+ paidamount + ", customer=" + customer + ", bank=" + bank + ", login=" + login + ", transaction="
-				+ transaction + "]";
-	}
+	// @Override
+	// public String toString() {
+	// 	return "Bill [amount=" + amount + ", bank=" + bank + ", billno=" + billno + ", cgst=" + cgst + ", customer="
+	// 			+ customer + ", date=" + date + ", discount=" + discount + ", login=" + login + ", paidamount="
+	// 			+ paidamount + ", sgst=" + sgst + ", transaction=" + transaction + "]";
+	// }
+
+	
 
 	
 	

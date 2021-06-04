@@ -4,8 +4,11 @@ package com.gurukrupa.gurukrupajewellors.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+
 import com.gurukrupa.gurukrupajewellors.entities.Bill;
+import com.gurukrupa.gurukrupajewellors.entities.Transaction;
 import com.gurukrupa.gurukrupajewellors.repositories.BillRepository;
+import com.gurukrupa.gurukrupajewellors.repositories.TransactionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,8 @@ public class BillController {
 
 	@Autowired
 	BillRepository repository;
+	@Autowired
+	TransactionRepository transactionRepository;
 	@GetMapping(value="/bills")
 	public ResponseEntity<List<Bill>>getAllBills()
 	{
@@ -63,14 +68,32 @@ public class BillController {
 	@PostMapping(value="/bills/save")
 	public ResponseEntity<Bill>saveBill(@RequestBody Bill bill)
 	{
-		return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
+		List<Transaction>trList = bill.getTransaction();
+		for(int index=0;index<bill.getTransaction().size();index++)
+		{
+			bill.getTransaction().get(index).setBill(bill);
+		}
+		//bill.setTransaction();
+		
+		System.out.println("Got to Save===="+bill.getBillno()+"\n Transaction is==\n");
+		for(Transaction tr:trList)
+		{
+			System.out.println(tr);
+		}
+		//return null;
+		Bill b = repository.save(bill);
+		System.out.println("Saved==> "+b);
+		return new ResponseEntity<Bill>(b,HttpStatus.OK);
 	}
 	@PutMapping(value="/bills/update")
 	public ResponseEntity<Bill>updateBill(@RequestBody Bill bill)
 	{
 		Bill b = repository.findById(bill.getBillno()).orElse(null);
-		if(b!=null)
-		return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
+		if(b!=null){
+			//repository.delete(b);
+			transactionRepository.deleteTransactionByBillNo(bill.getBillno());
+			return new ResponseEntity<Bill>(repository.save(bill),HttpStatus.OK);
+		}
 		else
 		return new ResponseEntity<Bill>(HttpStatus.BAD_REQUEST);
 	}

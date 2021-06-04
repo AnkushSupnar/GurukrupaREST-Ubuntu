@@ -1,4 +1,5 @@
 package com.gurukrupa.gurukrupajewellors.entities;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -6,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class Transaction {
@@ -18,8 +21,10 @@ public class Transaction {
 	Item item;
 	double rate;
 	double quantity;
-	@ManyToOne
-	@JoinColumn(name="billid",nullable = false)
+
+	
+	@ManyToOne(cascade= CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinColumn(name = "billid")
 	Bill bill;
 	public Transaction() {
 		super();
@@ -58,13 +63,14 @@ public class Transaction {
 	public Bill getBill() {
 		return bill;
 	}
+	@JsonBackReference
 	public void setBill(Bill bill) {
 		this.bill = bill;
 	}
-	@Override
-	public String toString() {
-		return "Transaction [id=" + id + ", item=" + item + ", rate=" + rate + ", quantity=" + quantity + ", bill="
-				+ bill + "]";
-	}
+	// @Override
+	// public String toString() {
+	// 	return "Transaction [id=" + id + ", item=" + item + ", rate=" + rate + ", quantity=" + quantity + ", bill="
+	// 			+ bill.getBillno() + "]";
+	// }
 	
 }
